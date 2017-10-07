@@ -18,92 +18,85 @@ blocktrail_secret = api.get_blocktrail_secret()
 trader_address = wallet.get_trader_address()
 trader_passcode = wallet.get_trader_passcode()
 
-url = "https://99a5dae8.ngrok.io"
-
-#vendor_address = wallet.get_vendor_address()
-#vendor_passcode = wallet.get_vendor_passcode()
+backend_url = "https://99a5dae8.ngrok.io"
 
 client = None
 trader = None
 
-@app.route("/")
-def hello():
-    return json.dumps(get_wallet_balance(vendor_address).json())
+date = None
+coinPercentages = {}
+coinLimits = {}
 
-def get_wallet_balance(address):
-    url = "https://api.blocktrail.com/v1/tbtc/address/{0}".format(address)
-    print("url: " + url)
-    payload = {"api_key": blocktrail_public}
-    response = requests.get(url, params=payload)
-    return response
-
-@app.route("/api/i")
-def test():
-    return "test"
+traderAddress = "2MzLGbQpMF9NEni8AqDRG4HPuUE2QHgG9nN"
 
 @app.route("/build")
 def build():
-	date= requests.args.get('date')
+    date = requests.args.get('date')
 	
-
 @app.route("/set-split")
 def setSplit():
-	coin = requests.args.get('coin')
-	percent = requests.args.get('percent')
-	#set how much of a certain coin is which percentage
+    coin = requests.args.get('coin')
+    percent = requests.args.get('percent')
+    coinPercentages[coin] = percent
 
 @app.route("/get-split")
 def getSplit():
-	coin = requests.args.get('coin')
-	#gets the request of a certain coin and returns the value of that coin
+    coin = requests.args.get('coin')
+    percent = coinPercentages[coin]
+    return json.dumps({result: percent})
 
 @app.route("/set-purchase-limit")
 def setPurchaseLimit():
-	coin = requests.args.get('coin')
-	setPurchaseLimit = requests.args.get('setPurchaseLimit') 
+    coin = requests.args.get('coin')
+    purchaseLimit = requests.args.get('setPurchaseLimit') 
+    coinLimits[coin] = purchaseLimit
 
 @app.route("/get-purchase-limit")
 def getPurchaseLimit():
-	coin = requests.args.get('coin')
+    coin = requests.args.get('coin')
+    percent = coinLimits[coin]
+    return json.dumps({result: percent})
 
 @app.route("/fast-forward")
 def fastForward():
-	integer= requests.args.get('integer')
-	duration= requests.args.get('duration')
-
-	if duration.contains('day')== true:
-		print("test1")
-
-	elif duration.contains('month')== true:
-		print ("test2")
-	else:
-		return "Bad request"
+    integer= requests.args.get('integer')
+    duration= requests.args.get('duration')
+    if (duration.contains('day') == true):
+        print ("test1")
+    elif (duration.contains('month') == true):
+        print ("test2")
+    else:
+        return "bad request"
 
 @app.route("/out-put-wallet")
 def outPutWallet():
-	return #wallet ammount
+    url = backend_url + "/balance"
+    payload = {"address": traderAddress}
+    response = requests.get(url, params=payload)
+    return json.dumps(response)
 
 @app.route("/out-put-portfolio")
 def outPutPortfolio():
+    return "hello world"
+    #data = jsonify(
+    #coinQuantity = #what ever the coin Quantity call thing is  ,  
+    #coinTotalValue = # call coin total value put it here,
+    #coinName = 
+    #)
 
-	data = jsonify(
-	coinQuantity = #what ever the coin Quantity call thing is  ,  
-	coinTotalValue = # call coin total value put it here,
-	coinName = 
-	)
+	#return jsonify(
+	#speech = "you have" + coinQuantity + coinName + "worth" + coinTotalValue , 
+	#displayText = speech, 
+	#data = {},
+	#contextOut = [],
+	#source = "The Source",
 
-	return jsonify(
-	speech = "you have" + coinQuantity + coinName + "worth" + coinTotalValue , 
-	displayText = speech, 
-	data = {},
-	contextOut = [],
-	source = "The Source",
+	#) + data
 
-	) + data
-
+# resets everything
 @app.route("/reset")
 def reset():
-	#clears the system
+    return "hello world"
 
 @app.route("/current-prices")
 def currentPrices():
