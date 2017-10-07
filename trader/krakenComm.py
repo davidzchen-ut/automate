@@ -30,6 +30,19 @@ class  BECon(object):
             closingValues.append(OHLCChart[-startingPosition-i][3])
         return closingValues
 
+    def getClosingValuesInRange(self, start, days, pair):
+        startDate = int(start)
+        days = int(days)
+        #startDate = buildDate-(days*SECONDS_PER_DAY)
+        buildDate = startDate+(days*SECONDS_PER_DAY)
+        OHLCChart = k.query_public('OHLC', req={'pair': pair, 'since': str(startDate), 'interval' : 1440})
+        OHLCChart = OHLCChart["result"][pair]
+        closingValues=[]
+        startingPosition=int((OHLCChart[-1][0]-buildDate)/86400)  
+        for i in range(1,days+1):
+            closingValues.append(OHLCChart[-startingPosition-i][3])
+        return closingValues
+
     def walletBalance(self):
         r = requests.get(self.serverName+'/Balance/')
         return r.json()["results"]

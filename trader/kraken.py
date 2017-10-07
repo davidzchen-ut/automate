@@ -6,6 +6,7 @@ import requests
 
 # internal modules
 import api
+import krakenComm
 import wallet
 
 app = Flask(__name__)
@@ -39,7 +40,7 @@ def hello():
 def get_balance():
     address = request.args.get("address")
     return json.dumps(get_wallet_balance(address))
-   
+
 @app.route("/send_transaction")
 def send():
     from_addr = request.args.get("from")
@@ -50,6 +51,23 @@ def send():
     print(value)
     response = send_transaction(str(from_addr), str(to_addr), int(value))
     return json.dumps(response)
+
+@app.route("/get_closings_by_fast_forward")
+def get_closings_in_range():
+    start = request.args.get("start")
+    days = request.args.get("days")
+    currency = request.args.get("currency")
+    krakenConnection = krakenComm.BECon("localhost:5000")
+    response = krakenConnection.getClosingValuesInRange(start, days, currency)
+    return json.dumps({"result": response})
+
+@app.route("/get_initial_closings")
+def get_initial_closings():
+    timestamp = request.args.get("timestamp")
+    currency = request.args.get("currency")
+    krakenConnection = krakenComm.BECon("localhost:5000")
+    result = krakenConnection.getClosingValues(timestamp, currency)
+    return json.dumps({"result": result})
 
 def get_wallet_balance(wallet_address):
     url = "{0}/addrs/{1}/balance".format(blockcypher_url, wallet_address)
