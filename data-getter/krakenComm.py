@@ -4,39 +4,34 @@
 
 import requests
 import json
-#import Flask
 import time
 import krakenex
 
 k = krakenex.API()
 
-secsPerDay=86400
+SECONDS_PER_DAY=86400
 
-def getClosingValues(buildDate,pair):
-    #buildDate - Starting date to use in Epoch Time, converted by the build command.
-    #pair - The pair to use. (Pair meaning Crypto->Standard Currency, ex: XXBTZUSD or XXBTZEUR). These values can be found on the Kraken website.
-    startDate=buildDate-(34*secsPerDay)
-    OHLCChart = k.query_public('OHLC', req={'pair': pair, 'since': str(startDate), 'interval' : 1440})
-    OHLCChart = OHLCChart["result"][pair]
-    closingValues=[]
-    startingPosition=OHLCChart[-1][0]-buildDate
-    startingPosition/=86400
-    startingPosition=int(startingPosition)
-    for i in range(1,35):
-        closingValues.append(OHLCChart[-startingPosition-i][3])
-    return closingValues
+class  BECon(object):
 
-def walletBalance():
-    k.load_key('kraken.key')
-    return k.query_private('Balance')
+    def __init__(self,serverName):
+        k=krakenex.API()
+        serverName=serverName
+
+    def getClosingValues(self,buildDate,pair):
+        #buildDate - Starting date to use in Epoch Time, converted by the build command.
+        #pair - The pair to use. (Pair meaning Crypto->Standard Currency, ex: XXBTZUSD or XXBTZEUR). These values can be found on the Kraken website.
+        buildDate=int(buildDate)
+        startDate=buildDate-(34*SECONDS_PER_DAY)
+        OHLCChart = k.query_public('OHLC', req={'pair': pair, 'since': str(startDate), 'interval' : 1440})
+        OHLCChart = OHLCChart["result"][pair]
+        closingValues=[]
+        startingPosition=int((OHLCChart[-1][0]-buildDate)/86400)  
+        for i in range(1,35):
+            closingValues.append(OHLCChart[-startingPosition-i][3])
+        return closingValues
+
+    def walletBalance(self):
+        r = requests.get(self.serverName+'/Balance/')
+        return r.json()["results"]
 
 
-#getClosingValues(1451606400,'XXBTZUSD') #January 1st 2016, BTZ to USD
-#walletBalance()
-
-#while 1:
-#    userInput=input("Enter command: ").split(" ")
-#    if userInput[0]=="closingValues":
-#        print(getClosingValues(int(userInput[1]),userInput[2]))
-#    elif userInput[0]=="balance":
-#        print(walletBalance())
