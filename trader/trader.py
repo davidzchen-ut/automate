@@ -3,10 +3,13 @@ from flask import request
 from flask import json
 
 # external modules
+import datetime
 import json
 import requests
+import time
 
 # internal modules
+import algorithm
 import api
 import wallet
 
@@ -31,8 +34,42 @@ traderAddress = "2MzLGbQpMF9NEni8AqDRG4HPuUE2QHgG9nN"
 
 @app.route("/build")
 def build():
-    date = requests.args.get('date')
-	
+    global date
+    temp_date = request.args.get('date')
+    date = time.mktime(datetime.datetime.strptime(temp_date, "%Y-%m-%d").timetuple())
+    url = backend_url + "/get_initial_closings"
+    payload = {"timestamp": int(date), "currency": "XXBTZUSD"}
+    response = requests.get(url, params = payload)
+    result = algorithm.initialize(response.json()["result"]) 
+    return json.dumps({"status": 200})
+
+@app.route("/fast-forward")
+def fastForward():
+    global date
+    integer = request.args.get('integer')
+    duration = request.args.get('duration')
+    if ("day" in duration):
+        url = backend_url + '/get_closings_by_fast_forward'
+        payload = {"start": int(date), "currency": "XXBTZUSD", "days": int(integer)}
+        orig_date_time = datetime.datetime.fromtimestamp(date)
+        new_date_time = orig_date_time + datetime.timedelta(days=int(integer))
+        date = new_date_time.timestamp()
+        response = requests.get(url, params = payload)
+        list_of_closes = response.json()["result"]
+        for i in list_of_closes:
+            should_buy, should_sell, do_nothing = algorithm.fast_forward(float(i))
+            if (should_buy):
+                print("bought some bit coins")
+            elif (should_sell):
+                print("sold some bit coins")
+            elif (do_nothing):
+                print("did nothing")
+
+    elif ("month" in duration):
+        print ("test2")
+    else:
+        return "bad request"
+
 @app.route("/set-split")
 def setSplit():
     coin = requests.args.get('coin')
@@ -56,17 +93,6 @@ def getPurchaseLimit():
     coin = requests.args.get('coin')
     percent = coinLimits[coin]
     return json.dumps({result: percent})
-
-@app.route("/fast-forward")
-def fastForward():
-    integer= requests.args.get('integer')
-    duration= requests.args.get('duration')
-    if (duration.contains('day') == true):
-        print ("test1")
-    elif (duration.contains('month') == true):
-        print ("test2")
-    else:
-        return "bad request"
 
 @app.route("/out-put-wallet")
 def outPutWallet():
