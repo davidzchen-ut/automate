@@ -1,0 +1,93 @@
+<html>
+	<head>
+    	<link href= "style.css" rel = "stylesheet">
+    	<script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.js" src = "myScripts.js"></script>
+    	<script src ="myScripts.js"></script>
+
+    	<title>Auto m8</title>
+    </head>
+
+	<body> 
+		<div class="header">
+  		<h2>Auto m8 Trader</h2>
+  		<h3>This page displays all the information for your portfolio along with Trends for your most valued electronic currency.</h3>
+  		<div><b><u><i>Monthly Market Trend</i></u></b></div>
+  			<table>
+				<th class = "tooltip"><a href = "https://bitcoin.org/" target ="_blank">Bitcoin</a><span class = "tooltiptext">Main Page</span></th>
+
+				<th class = "tooltip"><a href = "https://ethereum.org/" target ="_blank">Ethereum</a><span class = "tooltiptext">Main Page</span></th>
+
+				<th class = "tooltip"><a href = "https://litecoin.org/" target ="_blank">Lite coin</a><span class = "tooltiptext">Main Page</span></th>
+			</table>
+		</div>
+
+	<!-- Graph columns -->
+		<div class="row">
+  			<div class="column" onmouseover = "bitChart()"><canvas id = "myChart"></canvas></div>
+  			<div class="column" onmouseover = "ethChart()"><canvas id = "myChart1"></canvas></div>
+  			<div class="column" onmouseover = "liteChart()"><canvas id = "myChart2"></canvas></div>
+  			<div align = "center"><button type = "button" onclick = "combine()">Combine graphs</button></div>
+			<table>
+				<td align = "middle">
+					<div class = "combo-col"><canvas id = "combo"></canvas></div>
+				</td>
+			</table>
+		</div>
+
+<!-- account portfolio columns -->
+		<div class = "header">
+			<h4>Account Portfolio</h4>
+			<table>
+				<th class = "tooltip"><a href = "https://bitcoin.org/" target ="_blank">Bitcoin</a><span class = "tooltiptext">Main Page</span></th>
+
+				<th class = "tooltip"><a href = "https://ethereum.org/" target ="_blank">Ethereum</a><span class = "tooltiptext">Main Page</span></th>
+
+				<th class = "tooltip"><a href = "https://litecoin.org/" target ="_blank">Lite coin</a><span class = "tooltiptext">Main Page</span></th>
+			</table>
+		</div>
+
+		<div class="row">
+  			<div id="bitcoin" class="column"><h5 class = "graph-text">$ Split: 50%</h5>
+  				<div><h6 class = "graph-text"># of Bitcoins</h6></div>
+  				<div><h6 class = "number">8</h6></div>
+  			</div>
+
+  			<div id="ethereum" class="column"><h5 class = "graph-text">$ Split: 30%</h5>
+  				<div><h6 class = "graph-text"># of Ethereum coins</h6></div>
+  				<div><h6 class = "number">3</h6></div>
+  			</div>
+
+  			<div id="litecoin" class="column"><h5 class = "graph-text">$ Split:20%</h5>
+  				<div><h6 class = "graph-text"># of Litecoins</h6></div>
+  				<div><h6 class = "number">4</h6></div>
+  			</div>
+
+		</div>
+
+		<div class = "header">
+			<h4>Transaction History</h4>
+
+			<table>
+				<th class = "tooltip"><a href = "file:///C:/Users/djord/Desktop/Hacksu/KHE/autoM8bitcoin.html">Refresh</a><span class = "tooltiptext">Click to refresh</span></th>
+			</table>
+		</div>
+
+<!-- transaction history -->
+
+		<div class="row">
+			<table>
+				<td align = "middle">
+					<div class = "combo-col">List transaction history</div>
+				</td>
+			</table>
+		</div>
+
+
+		<div class="footer">
+  		<p>About the authors?</p>
+		</div>
+
+
+    </body>
+
+
