@@ -4,6 +4,8 @@ from flask import request
 from flask import Response
 from flask import json
 from flask import redirect
+from flask import render_template
+from flask import url_for
 from flask_cors import CORS
 
 # external modules
@@ -41,6 +43,13 @@ coinLimits = {}
 traderAddress = "2MzLGbQpMF9NEni8AqDRG4HPuUE2QHgG9nN"
 
 current_price = None
+
+transactions = []
+
+@app.route("/")
+def good_morning():
+    print(app.root_path)
+    return render_template("autom8bitcoin.html", transactions=transactions)
 
 def buy_percent():
     url = "{0}/get_money".format(backend_url) 
@@ -120,18 +129,17 @@ def fastForward():
         list_of_closes = response.json()["result"]
         for i in list_of_closes:
             current_price = float(i)
-            print(str(current_price))
             should_buy, should_sell, do_nothing = algorithm.fast_forward(float(i))
             if (should_buy):
-                print("bought some bit coins")
+                transactions.append("bought some bit coins")
                 buy_percent()
             elif (should_sell):
-                print("sold some bit coins")
+                transactions.append("sold some bit coins")
                 sell_percent()
             elif (do_nothing):
                 print("did nothing")
             response = outPutPortfolio()
-            print("total value of wallet: " + str(response["result"]["total"]))
+            transactions.insert(0, "total value of wallet: " + str(response["result"]["total"]))
             
     return json.dumps({"status": 200})
 
