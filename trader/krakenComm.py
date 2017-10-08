@@ -27,7 +27,7 @@ class  BECon(object):
         closingValues=[]
         startingPosition=int((OHLCChart[-1][0]-buildDate)/86400)  
         for i in range(1,35):
-            closingValues.append(OHLCChart[-startingPosition-i][3])
+            closingValues.append(OHLCChart[-startingPosition-i][4])
         return closingValues
 
     def getClosingValuesInRange(self, start, days, pair):
@@ -40,7 +40,7 @@ class  BECon(object):
         closingValues=[]
         startingPosition=int((OHLCChart[-1][0]-buildDate)/86400)  
         for i in range(1,days+1):
-            closingValues.append(OHLCChart[-startingPosition-i][3])
+            closingValues.append(OHLCChart[-startingPosition-i][4])
         return closingValues
 
     def walletBalance(self):
